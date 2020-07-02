@@ -33,6 +33,16 @@
 
 ### 思路：
 
+固定左指针，右指针移动，如果当前元素为0，k--；
+
+每次移动右指针，更新最终结果，直到右指针指向数组尾；
+
+当k<0时表示新加入元素为0，且右指针不能移动；
+
+此时移动左指针，若左指针指向元素为0，则k++；
+
+当k==0时，右指针可以继续右移；
+
 
 
 ### 算法设计技巧：
@@ -48,24 +58,21 @@
 ```
 class Solution {
     public int longestOnes(int[] A, int K) {
-        int left = 0;
-        int right = 0;
-        int max = 0;
-        while (left <= right && right < A.length) {
-            while (right < A.length && (A[right]!=0 || K != 0)) {
-                if (A[right]==0) K--;
-                right++;
+        if(A==null||A.length==0)
+            return 0;
+        int res=0;
+        int l=0;
+        for(int r=0;r<A.length;r++){
+            if(A[r]==0)
+                K--;
+            while (K<0){
+                if(A[l]==0)
+                    K++;
+                l++;
             }
-            max = Math.max(right - left, max);
-            if (A[left]!=0) {
-                left++;
-            }
-            else {
-                left++;
-                right++;
-            }
+            res = Math.max(res,r-l+1);
         }
-        return max;
+        return res;
     }
 }
 ```
