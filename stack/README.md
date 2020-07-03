@@ -49,13 +49,13 @@ for(int i=0;i<inputs.length;i++)//遍历数组
 
 ##### 5.1基础题：
 
-谷歌面试题-求每个数右边第一大元素距离
+[谷歌面试题-求每个数右边第一大元素距离](https://github.com/sky-noodle/CodeGreenBook/blob/master/leetcode/Goole_interview1.md)
 
 
 
-739.每日温度
+[739.每日温度](https://github.com/sky-noodle/CodeGreenBook/blob/master/leetcode/leetcode739_%E6%AF%8F%E6%97%A5%E6%B8%A9%E5%BA%A6.md)
 
-503.下一个更大元素II
+[503.下一个更大元素II](https://github.com/sky-noodle/CodeGreenBook/blob/master/leetcode/leetcode503_%E4%B8%8B%E4%B8%80%E4%B8%AA%E6%9B%B4%E5%A4%A7%E5%85%83%E7%B4%A0II.md)
 
 901.股票价格跨度
 

@@ -63,6 +63,12 @@ value：前缀和出现多少次；
 
 
 
+[560.和为K的子数组](https://github.com/sky-noodle/CodeGreenBook/blob/master/leetcode/leetcode560_%E5%92%8C%E4%B8%BAK%E7%9A%84%E5%AD%90%E6%95%B0%E7%BB%84.md)
+
+523.
+
+974.
+
 
 
 
