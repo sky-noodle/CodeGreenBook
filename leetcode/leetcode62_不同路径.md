@@ -29,6 +29,11 @@
 state：dp[x][y] 从起点到x，y路径数
 function：（考虑最后一步）
 dp[x][y]=dp[x-1][y]+dp[x][y-1]
+init:
+dp[0][0]=1
+dp[0][i]=1
+dp[i][0]=1
+answer:dp[n-1][m-1]
 ```
 
 ### 算法设计技巧：
@@ -42,7 +47,23 @@ dp[x][y]=dp[x-1][y]+dp[x][y-1]
 代码：
 
 ```
-
+class Solution {
+    public int uniquePaths(int m, int n) {
+     int[][] dp=new int[m][n];
+        dp[0][0] = 1;
+        for (int i = 0; i < m; i ++){
+            for (int j = 0; j < n; j ++){
+                if (i == 0 || j == 0){
+                    dp[i][j] = 1;
+                }
+                else{
+                    dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+                }
+            }
+        }
+        return dp[m - 1][n - 1];
+    }
+}
 
 ```
 

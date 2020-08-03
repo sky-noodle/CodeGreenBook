@@ -17,7 +17,7 @@ trick：
 1.最值问题（序列、路径的最大值等）
 2.是否问题（能否找到一条路径满足X条件） 
 3.计数问题（一共多少走法）
-排除动态规划情况：
+同时：
 1.不能sort；
 2.不能swap；
 例如集合问题
@@ -46,6 +46,12 @@ answer：需要的值
 
 
 2.sequence DP （40%）
+state: f[i]表示“前i”个位置/数字/字母,(以第i个为)...
+function: f[i] = f[j] … j 是i之前的一个位置
+intialize: f[0]..
+answer: f[n-1]..
+爬楼梯问题
+
 3.two sequence DP （40%）
 4.backpack （10%）
 ```
