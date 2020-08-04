@@ -49,7 +49,7 @@ answer：需要的值
 state: f[i]表示“前i”个位置/数字/字母,(以第i个为)...
 function: f[i] = f[j] … j 是i之前的一个位置
 intialize: f[0]..
-answer: f[n-1]..
+answer: f[n-1].. 
 爬楼梯问题
 
 3.two sequence DP （40%）
