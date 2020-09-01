@@ -173,6 +173,31 @@ class Solution {
 }
 ```
 
+```
+    dp[i]表示从起点出发能不能走到位置；
+    dp[i]= dp[j] and nums[j]+j>=i;
+    
+    
+    public boolean canJump(int[] nums) {
+        if(nums==null||nums.length==0){
+            return false;
+        }
+        boolean[] dp = new boolean[nums.length];
+        dp[0]= true;
+        for(int i=1;i<nums.length;i++){
+            for(int j=0;j<i;j++) {
+                if (dp[j] && (j + nums[j] >= i)) {
+                    dp[i] = true;
+                    break;
+                }
+            }
+        }
+        return dp[nums.length-1];
+    }
+```
+
+
+
 #### [45. 跳跃游戏 II](https://leetcode-cn.com/problems/jump-game-ii/)
 
 ```
