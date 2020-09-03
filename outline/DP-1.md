@@ -315,6 +315,8 @@ class Solution {
 ```
 
 ```
+//dp[i]=MAX{dp[j]+1,nums[j]<nums[i]}
+ 
 class Solution {
     public int lengthOfLIS(int[] nums) {
         int len = nums.length;
