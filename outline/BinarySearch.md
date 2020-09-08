@@ -22,7 +22,19 @@ if (nums[end] == target) {
 return -1;
 ```
 
-寻找有序数组特定元素的开始和结束位置；
+模板解析：
+
+1.start+1 < end 表示循环结束条件为start与end相交或相邻；
+
+2.死循环：（死循环情况1.mid计算结果为start，例如(1+2)/2=1；2.后面移动为start=mid；3.循环结束条件为start与end相交）；
+
+3.内部 start/end = mid，不+1不会漏解；
+
+4.循环结束后，start与end可能不等，因此需要判断下二者谁为解；
+
+5.nums[mid] == target，如果任何位置，return mid ，如果第一位置end = mid，如果最后位置，start=mid；
+
+### 寻找有序数组特定元素的开始和结束位置
 
 ```
  public static int[] searchRange(int[] nums,int target){
@@ -202,6 +214,16 @@ public class Solution extends VersionControl {
 
 nums = [4,5,6,7,0,1,2], target = 0 输出: 4 
 
+思路：
+
+1.nums[mid]先跟nums[left]比较，确定mid落在左侧上升数组还是右侧旋转后的上升数组；
+
+2.两段数组分别处理，左侧数组：只有target在left与mid之间，right=mid；否则left=mid，因为此时不确定target是在哪个上升数组；
+
+3.右侧数组同理：只有target在mid与right之间，left=mid；否则right=mid；
+
+4.最后再判断下left与right值；
+
 ```
 public int search(int[] nums, int target) {
         if(nums==null || nums.length==0)
@@ -241,43 +263,42 @@ public int search(int[] nums, int target) {
 
 nums = [2,5,6,0,0,1,2], target = 0
 
+思路：与上题一致，对加入的重复数字做处理，如果nums[left]==nums[mid],则无法判断mid落在哪个数组，此时left++；
+
 ```
 class Solution {
 public boolean search(int[] nums, int target) {
         if (nums == null || nums.length == 0) {
             return false;
         }
-        int start = 0;
-        int end = nums.length - 1;
-        int mid;
-        while (start <= end) {
-            mid = start + (end - start) / 2;
-            if (nums[mid] == target) {
+        int left = 0;
+        int right = nums.length-1;
+        while (left+1 < right){
+            int mid = (right+left)/2;
+            if(nums[mid]==target){
                 return true;
             }
-            if (nums[start] == nums[mid]) {
-                start++;
+            if(nums[left]==nums[mid]){
+                left++;
                 continue;
             }
-            //前半部分有序
-            if (nums[start] < nums[mid]) {
-                //target在前半部分
-                if (nums[mid] > target && nums[start] <= target) {
-                    end = mid - 1;
-                } else {  //否则，去后半部分找
-                    start = mid + 1;
+            if(nums[mid]>nums[right]){
+                if(nums[left]<=target && nums[mid]>=target){
+                    right = mid;
+                }else{
+                    left=mid;
                 }
-            } else {
-                //后半部分有序
-                //target在后半部分
-                if (nums[mid] < target && nums[end] >= target) {
-                    start = mid + 1;
-                } else {  //否则，去后半部分找
-                    end = mid - 1;
+            }else{
+                if(nums[mid]<=target && nums[right]>=target){
+                    left=mid;
+                }else{
+                    right = mid;
                 }
             }
         }
-        //一直没找到，返回false
+        if(nums[left]==target || nums[right]==target){
+            return true;
+        }
         return false;
     }
 }
@@ -286,20 +307,24 @@ public boolean search(int[] nums, int target) {
 #### [153. 寻找旋转排序数组中的最小值](https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array/)
 
 ```
+class Solution {
     public int findMin(int[] nums) {
-        int len = nums.length;
-        int left=0;
-        int right=len-1;
-        int mid;
-        while(left<right){
-            mid=(left+right)/2;
-            if(nums[mid]>nums[right])
-                left=mid+1;
-            else 
-                right=mid;
+        if(nums==null||nums.length==0){
+            return -1;
         }
-        return nums[left];
+        int left = 0;
+        int right = nums.length-1;
+        while (left+1<right){
+            int mid = (left+right)/2;
+            if(nums[mid]>nums[right]){
+                left = mid;
+            }else{
+                right=mid;
+            }
+        }
+        return Math.min(nums[left],nums[right]);
     }
+}
 ```
 
 #### [154. 寻找旋转排序数组中的最小值 II](https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array-ii/)
@@ -307,28 +332,95 @@ public boolean search(int[] nums, int target) {
 注意数组中可能存在重复的元素。
 
 ```
+class Solution {
     public int findMin(int[] nums) {
-        int low = 0;
-        int high = nums.length - 1;
-        while (low < high) {
-            int pivot = low + (high - low) / 2;
-            if (nums[pivot] < nums[high]) {
-                high = pivot;
-            } else if (nums[pivot] > nums[high]) {
-                low = pivot + 1;
-            } else {
-                high -= 1;
+        int left = 0;
+        int right = nums.length-1;
+        while (left+1<right){
+            int mid = (left+right)/2;
+            if(nums[mid]==nums[right]){
+                right--;
+            }else if(nums[mid]>nums[right]){
+                left = mid;
+            }else{
+                right=mid;
             }
         }
-        return nums[low];
+        return Math.min(nums[left],nums[right]);
     }
+    
+}
 ```
 
 #### [4. 寻找两个正序数组的中位数](https://leetcode-cn.com/problems/median-of-two-sorted-arrays/)
 
+思路：
+
+1.二分思想每次删除k/2个值；
+
+```
+
+class Solution {
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        if (nums1 == null || nums2 == null) {
+            return 0;
+        }
+        int len1 = nums1.length;
+        int len2 = nums2.length;
+        int lenall = len1+len2;
+        if(lenall%2==0){
+            return (findK(nums1,0,nums2,0,lenall/2)+findK(nums1,0,nums2,0,lenall/2+1))/2.0;
+        }else{
+            return findK(nums1,0,nums2,0,lenall/2+1);
+        }
+
+    }
+    public int findK(int[] nums1,int start1,int[] nums2,int start2,int k){
+        if(start1>= nums1.length){
+            return nums2[start2+k-1];
+        }
+        if(start2>=nums2.length){
+            return nums1[start1+k-1];
+        }
+        if(k==1){
+            return Math.min(nums1[start1],nums2[start2]);
+        }
+        int value1 = start1+k/2-1< nums1.length ? nums1[start1+k/2-1]:Integer.MAX_VALUE;
+        int value2 = start2+k/2-1< nums2.length ? nums2[start2+k/2-1]:Integer.MAX_VALUE;
+        if(value1<value2){
+            return findK(nums1,start1+k/2,nums2,start2,k-k/2);
+        }else{
+            return findK(nums1,start1,nums2,start2+k/2,k-k/2);
+        }
+    }
+}
+```
 
 
 
+#### [88. 合并两个有序数组](https://leetcode-cn.com/problems/merge-sorted-array/)
+
+```
+class Solution {
+    public void merge(int[] nums1, int m, int[] nums2, int n) {
+        int index1=m-1;
+        int index2=n-1;
+        for(int i= n+m-1;i>=0;i--){
+            if(index1<0){
+                nums1[i]=nums2[index2--];
+            }else if(index2<0){
+                nums1[i]=nums1[index1--];
+            }else if(nums1[index1]>=nums2[index2]){
+                nums1[i]=nums1[index1];
+                index1--;
+            }else{
+                nums1[i]=nums2[index2];
+                index2--;
+            }
+        }
+    }
+}
+```
 
 
 

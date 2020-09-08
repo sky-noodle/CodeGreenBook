@@ -338,11 +338,30 @@ class Solution {
 
 ## 3.Two Sequences DP
 
+```
+dp[i][j]:代表数组1的前i匹配数组2的前j；
+function：研究第i和第j匹配关系；
+init：dp[i][0]和dp[0][i]
+```
+
+
+
+
+
 #### [1143. 最长公共子序列](https://leetcode-cn.com/problems/longest-common-subsequence/)
 
 ```
 输入：text1 = "abcde", text2 = "ace" 
 输出：3  
+```
+
+```
+dp[i][j] 表示text1以i结尾，text2以j结尾的最长公共子序列长度；
+dp[i][j]=dp[i-1][j-1]+1 //text[i]==text[j]
+				=max{dp[i-1][j],dp[i][j-1]} //text[i]!=text[j]
+下标问题：由于下标从0开始计数，因此dp数组的dp[i][0]和dp[0][j]初始化为0；
+比较text[i]与text[j]时，去下标i-1，j-1
+最终结果为dp[iLen][jLen];
 ```
 
 ```
@@ -353,9 +372,10 @@ class Solution {
         int[][] dp = new int[iLen+1][jLen+1];
         for(int i=1;i<=iLen;i++){
             for(int j=1;j<=jLen;j++){
-                dp[i][j] =Math.max( dp[i-1][j],dp[i][j-1]);
                 if(text1.charAt(i-1)==text2.charAt(j-1)){
-                    dp[i][j] = dp[i-1][j-1]+1;
+                    dp[i][j]=dp[i-1][j-1]+1;
+                }else {
+                    dp[i][j]=Math.max(dp[i][j-1],dp[i-1][j]);
                 }
             }
         }
@@ -363,4 +383,94 @@ class Solution {
     }
 }
 ```
+
+### [79. 最长公共子串](https://www.lintcode.com/problem/longest-common-substring/description)
+
+```
+状态转移方程：dp[i][j]= dp[i-1][j-1]+1 //A[i]==B[j]
+									 = 0 //A[i]!=B[j]
+```
+
+```
+    public int longestCommonSubstring(String A, String B) {
+        if(A==null || B==null){
+            return 0;
+        }
+        // write your code here
+                int ALen = A.length();
+        int BLen = B.length();
+        int res=0;
+        int[][] dp = new int[ALen+1][BLen+1];
+        for(int i =1;i<=ALen;i++){
+            for(int j=1;j<=BLen;j++){
+                if(A.charAt(i-1)==B.charAt(j-1)){
+                    dp[i][j]=dp[i-1][j-1]+1;
+                }else {
+                    dp[i][j]=0;
+                }
+                res = Math.max(res,dp[i][j]);
+            }
+        }
+        return res;
+    }
+```
+
+#### [72. 编辑距离](https://leetcode-cn.com/problems/edit-distance/)
+
+```
+dp[i][j] str1 的前i个字符变换成str的前j个字符的编辑距离；
+dp[i][j] = min{dp[i][j-1]+1,dp[i-1][j-1],dp[i][j]}  str1[i]==str[j]
+				= min{dp[i][j-1]+1，dp[i-1][j]+1,dp[i-1][j-1]+1}
+dp[i][j-1]+1 //  插入一个字符
+d[i-1][j]+1 // 删除一个字符
+
+```
+
+#### [115. 不同的子序列](https://leetcode-cn.com/problems/distinct-subsequences/)
+
+```
+dp[i][j] 表示str1前字符中选择str2的前j字符有多少种方案；
+dp[i][j] = dp[i-1][j-1]+dp[i-1][j]    str[i]==str[j]
+				=dp[i-1][j] str[i]!=str[j]
+str2[j] 是匹配的字符，所以不能扔，但是str1[i]可以扔掉计算总共方案个数
+```
+
+
+
+#### [516. 最长回文子序列](https://leetcode-cn.com/problems/longest-palindromic-subsequence/)
+
+```
+可以理解为求ｓ和ｓ的逆序的最长公共子序列
+dp[i][j] 表示i 字符到 j 字符的最长共子序列
+dp[i][j]= dp[i+1][j-1] +2  // s[i]==s[j]
+max{dp[i+1][j] ,dp[i][j-1]}
+遍历技巧，i 从后往前遍历，j 从i+1 位置往后遍历，保证遍历的是之前遍历过的dp存储结果；
+```
+
+```
+class Solution {
+    public int longestPalindromeSubseq(String s) {
+        if(s==null || s.length()==0){
+            return 0;
+        }
+        int len = s.length();
+        int[][] dp = new int[len][len];
+        int res =1;
+        for(int i=len-1;i>=0;i--){
+            dp[i][i]=1;
+            for(int j=i+1;j<len;j++){
+                if(s.charAt(i)==s.charAt(j)){
+                    dp[i][j]=dp[i+1][j-1]+2;
+                }else{
+                    dp[i][j]=Math.max(dp[i+1][j],dp[i][j-1]);
+                }
+                res = Math.max(dp[i][j],res);
+            }
+        }
+        return res;
+    }
+}
+```
+
+
 

@@ -1,5 +1,203 @@
 # CodeGreenBook
 
+字符串问题基本概念：
+
+1.回文；
+
+2.子串（连续）；
+
+3.子序列（不连续）；
+
+4.前缀树（Trie树）；
+
+5.后缀树和后缀数组；
+
+6.匹配；
+
+7.字典序；
+
+基本操作：
+
+1.与数组有关操作：增删改查；
+
+2.字符的替换；
+
+3.字符串的旋转；
+
+常见类型：
+
+ ### 1.规则判断
+
+1. 是否符合整数规则；
+
+2. 浮点数规则；
+3. 回文规则；
+
+### 2.数字运算
+
+大数
+
+### 3. 数组相关
+
+
+
+### 4.字符计数
+
+1. 哈希表
+2. 固定长度数组
+3. 滑动窗口问题、寻找无重复字符子串、计算变位词
+
+### 5.动态规划
+
+1.最长公共子串
+
+2.最长公共子序列
+
+3.最长回文子串
+
+4.最长回文子序列
+
+### 6. 搜索
+
+ [剑指 Offer 45. 把数组排成最小的数](https://leetcode-cn.com/problems/ba-shu-zu-pai-cheng-zui-xiao-de-shu-lcof/)
+
+```
+输入: [3,30,34,5,9]
+输出: "3033459"
+```
+
+思路：重写比较器进行排序；
+
+比较s1+s2 与 s2+s1
+
+```
+class Solution {
+    public String minNumber(int[] nums) {
+        int len = nums.length;
+        String[] str = new String[len];
+        for(int i=0;i<len;i++){
+            str[i]= String.valueOf(nums[i]);
+        }
+        Arrays.sort(str,new Comparator<String>(){
+            @Override
+            public int compare(String s1,String s2){
+                String c1 = s1+s2;
+                String c2 = s2+s1;
+                return c1.compareTo(c2);
+            }
+        });
+        StringBuffer res = new StringBuffer();
+        for(String s:str){
+            res.append(s);
+        }
+        return res.toString();
+    }
+}
+```
+
+#### [剑指 Offer 05. 替换空格](https://leetcode-cn.com/problems/ti-huan-kong-ge-lcof/)
+
+```
+输入：s = "We are happy."
+输出："We%20are%20happy."
+```
+
+思路：从后往前处理
+
+```
+class Solution {
+    public String replaceSpace(String s) {
+        int count = 0;
+        for(int i=0;i<s.length();i++){
+            if(s.charAt(i)==' '){
+                count ++;
+            }
+        }
+        int newLen = s.length()+count*2;
+        char[] ch = new char[newLen];
+        newLen--;
+        for(int i = s.length()-1;i>=0;i--){
+            if(s.charAt(i)==' '){
+                ch[newLen--]= '0';
+                ch[newLen--]= '2';
+                ch[newLen--]= '%';
+            }else {
+                ch[newLen--] = s.charAt(i);
+            }
+        }
+        return String.valueOf(ch);
+    }
+}
+```
+
+#### 有效的括号
+
+给定一个只包括 `'('`，`')'`，判断是否有效匹配
+
+```
+public boolean isValid(String s) {
+    int count = 0;
+    for(int i=0;i<s.length();i++){
+        if(s.charAt(i)=='('){
+            count++;
+        }else if(s.charAt(i)==')'){
+            count--;
+        }
+        if(count<0){
+            return false;
+        }
+    }
+    if(count==0){
+        return true;
+    }else{
+        return false;
+    }
+}
+```
+
+#### [3. 无重复字符的最长子串](https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/)
+
+思路：
+
+1.hash 存储每个字母上次出现的位置；
+
+2.pre存储i-1位置结束的最长无重复子串长度；
+
+3.比较当前字母上次出现位置A与i-1结尾的最长子串左侧开始位置B(i-1-pre);
+
+4.如果B在A右侧，说明B与A之间存在当前子串重复字符且i位置字符不在当前子串中，则以i结尾最长为pre+1；
+
+5.如果B在A左侧，说明i位置字符出现在当前子串中，以i结尾子串最长为i-A（不包含A）；
+
+
+
+```
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+      int[] hash = new int[256];
+        Arrays.fill(hash,-1);
+        int pre = 1;
+        int res = 0;
+        for(int i=0;i<s.length();i++){
+            char t = s.charAt(i);
+            int preIndex = hash[t];
+            if(preIndex+1 < i-pre-1+1){
+                pre = pre + 1;
+            }else{
+                pre = i-preIndex;
+            }
+            res = Math.max(res,pre);
+            hash[t] = i;
+        }
+        return res;
+    }
+}
+```
+
+
+
+
+
 #### [796. 旋转字符串](https://leetcode-cn.com/problems/rotate-string/)
 
 ```
