@@ -112,7 +112,7 @@ class Solution {
             if(s.charAt(i)==' '){
                 count ++;
             }
-        }
+        } 
         int newLen = s.length()+count*2;
         char[] ch = new char[newLen];
         newLen--;
