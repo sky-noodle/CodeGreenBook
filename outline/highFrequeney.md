@@ -144,3 +144,81 @@ class Solution {
 }
 ```
 
+
+
+#### [53. 最大子序和](https://leetcode-cn.com/problems/maximum-subarray/)
+
+```
+输入: [-2,1,-3,4,-1,2,1,-5,4]
+输出: 6
+[-2,-1,-4,0,-1,1,3,-2,2]
+```
+
+
+
+```
+
+```
+
+
+
+
+
+#### [121. 买卖股票的最佳时机](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock/)
+
+```
+输入: [7,1,5,3,6,4]
+输出: 5
+思路：前缀和思想，遍历一遍，每个当前元素减去当前最小值，得到类似前缀和数组，对该数组取最大值即可；
+```
+
+```
+class Solution {
+    public int maxProfit(int[] prices) {
+        if(prices==null || prices.length==0){
+            return 0;
+        }
+        int[] pix = new int[prices.length];
+        int min=prices[0];
+        int res=0;
+        for(int i=1;i<prices.length;i++){
+            if(prices[i]>min){
+                pix[i] = prices[i]-min;
+            }else{
+                pix[i]=0;
+            }
+            min = Math.min(min,prices[i]);
+            res = Math.max(res,pix[i]);
+        }
+    return res;
+    }
+}
+```
+
+本题不需考虑严格的当前最优买卖数组，因此可化简为：
+
+```
+class Solution {
+    public int maxProfit(int[] prices) {
+      if(prices==null||prices.length==0)
+    		return 0;
+    	int len = prices.length;
+    	int max=0;
+    	int res = Integer.MAX_VALUE;
+    	for(int i=0;i<len;i++) {
+    		res = Math.min(prices[i], res);
+    		max = Math.max(max, prices[i]-res);
+    	}
+    	return max;
+    }
+}
+```
+
+#### [123. 买卖股票的最佳时机 III](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-iii/)
+
+```
+输入: [3,3,5,0,0,3,1,4]
+输出: 6
+最多买卖两次，无相交
+
+```
