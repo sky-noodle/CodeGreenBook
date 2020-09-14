@@ -152,17 +152,47 @@ class Solution {
 输入: [-2,1,-3,4,-1,2,1,-5,4]
 输出: 6
 [-2,-1,-4,0,-1,1,3,-2,2]
+思路：遍历的时候更新子序列和，如果和小于0，则代表需要重新开始新的子序列加和；
+同时max变量存储全局最大值；
+dp：dp[i]代表以结尾的子序列最大和；
+状态转移为去加上当前num[i]的子序列和已经重新计数的子序列和的较大者；
+dp[i] = Math.max(dp[i-1]+nums[i],nums[i])
 ```
 
 
 
 ```
-
+public int maxSubArray(int[] nums) {
+    if (nums == null)
+        return 0;
+    int len = nums.length;
+    int max = nums[0];
+    int sum = 0;
+    for(int i=0;i<len;i++) {
+        sum=sum+nums[i];
+        if(max<sum)
+            max=sum;
+        if(sum<0)
+            sum=0;
+    }
+    return max;
+}
 ```
 
-
-
-
+```
+class Solution {
+    public int maxSubArray(int[] nums) {
+        int[] dp = new int[nums.length];
+        dp[0]=nums[0];
+        int res = nums[0];
+        for(int i=1;i<nums.length;i++){
+            dp[i] = Math.max(dp[i-1]+nums[i],nums[i]);
+            res = Math.max(dp[i],res);
+        }
+        return res;
+    }
+}
+```
 
 #### [121. 买卖股票的最佳时机](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock/)
 
@@ -214,11 +244,137 @@ class Solution {
 }
 ```
 
+
+
+#### [122. 买卖股票的最佳时机 II](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/)
+
+```
+输入: [7,1,5,3,6,4]
+输出: 7
+解释: 在第 2 天（股票价格 = 1）的时候买入，在第 3 天（股票价格 = 5）的时候卖出, 这笔交易所能获得利润 = 5-1 = 4 。
+     随后，在第 4 天（股票价格 = 3）的时候买入，在第 5 天（股票价格 = 6）的时候卖出, 这笔交易所能获得利润 = 6-3 = 3 
+思路：贪心，只要有收益就买卖
+```
+
+```
+class Solution {
+    public int maxProfit(int[] prices) {
+        if(prices==null||prices.length==0)
+            return 0;
+        int len = prices.length;
+        int res = 0;
+        for(int i=1;i<len;i++){
+            if(prices[i]>prices[i-1]){
+                res+=prices[i]-prices[i-1];
+            }
+        }
+        return res;
+    }
+}
+```
+
+
+
 #### [123. 买卖股票的最佳时机 III](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-iii/)
 
 ```
 输入: [3,3,5,0,0,3,1,4]
 输出: 6
 最多买卖两次，无相交
+思路：第一次遍历，维护一个数组pix，描述的是到i为止，一次买卖最大收益；
+第二次遍历，从后往前寻找最优两次买卖分割处，满足，当前最大买入值-当前卖出值-截止当前之前的买卖最大收益；
+```
 
 ```
+class Solution {
+    public int maxProfit(int[] prices) {
+         if(prices==null||prices.length==0)
+            return 0;
+        int len = prices.length;
+        int min = prices[0];
+        int[] pix = new int[len];
+        pix[0]=0;
+        for(int i=1;i<len;i++){
+            pix[i] = Math.max(pix[i-1],prices[i]-min);
+            min = Math.min(min,prices[i]);
+        }
+        int sell = prices[len-1];
+        int best = 0;
+        for(int i=len-2;i>=0;i--){
+            best = Math.max(best,sell-prices[i]+pix[i]);
+            sell = Math.max(sell,prices[i]);
+        }
+        return best;
+    }
+}
+```
+
+### 44. 最小子数组
+
+```
+给定一个整数数组，找到一个具有最小和的连续子数组。返回其最小和。
+输入：[1, -1, -2, 1]
+输出：-3
+思路：！！！把max subarray 置反
+
+```
+
+```
+    public int minSubArray(List<Integer> nums) {
+        // write your code here
+        if(nums==null || nums.size()==0){
+            return 0;
+        }
+        int max = -nums.get(0);
+        int sum = 0;
+        for(int i=0;i<nums.size();i++){
+           nums.set(i, -nums.get(i));
+           sum = nums.get(i)+sum;
+           max = Math.max(max,sum);
+           if(sum<0) {
+               sum = 0;
+           }
+        }
+        return -max;
+    }
+```
+
+### 子数组之和
+
+```
+给定一个整数数组，找到和为 00 的子数组。你的代码应该返回满足要求的子数组的起始位置和结束位置
+输入: [-3, 1, 2, -3, 4]
+输出: [0,2] 或 [1,3]	
+样例解释： 返回任意一段和为0的区间即可。
+思路：
+```
+
+
+
+```
+    public List<Integer> subarraySum(int[] nums) {
+        // write your code here
+        List<Integer> res = new ArrayList<>();
+       if(nums==null||nums.length==0){
+           return res;
+       }
+       int len = nums.length;
+       int[] pix = new int[len+1];
+       pix[0]=0;
+          for(int i=0;i<len;i++){
+           pix[i+1]=nums[i]+pix[i];
+       }
+        Map<Integer,Integer> map = new HashMap<>();
+       for(int i=0;i<len+1;i++){
+           if(map.containsKey(pix[i])){
+               res.add(map.get(pix[i]));
+               res.add(i-1);
+               return res;
+           }else{
+               map.put(pix[i],i);
+           }
+       }
+       return res;
+    }
+```
+
