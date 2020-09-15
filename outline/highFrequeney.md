@@ -378,3 +378,129 @@ class Solution {
     }
 ```
 
+[49. 字符大小写排序](https://www.lintcode.com/problem/sort-letters-by-case/description)
+
+```
+给定一个只包含字母的字符串，按照先小写字母后大写字母的顺序进行排序
+输入:  "abAcD"
+输出:  "acbAD"
+思路：快排分组，把小写放到左边，大写放到右边；
+'A' 65; 'a' 97
+```
+
+```
+    public void sortLetters(char[] chars) {
+        if(chars==null || chars.length==0){
+            return;
+        }
+        int left = 0;
+        int right = chars.length-1;
+        char key = chars[left];
+        while (left<right){
+            while (left<right && chars[right]-'A'>=0 && chars[right]-'a'<0){
+                right--;
+            }
+            chars[left]=chars[right];
+            while (left<right&&chars[left]-'a'>=0){
+                left++;
+            }
+            chars[right]=chars[left];
+        }
+        chars[left]=key;
+    }
+```
+
+#### [75. 颜色分类](https://leetcode-cn.com/problems/sort-colors/)
+
+```
+给定一个包含红色、白色和蓝色，一共 n 个元素的数组，原地对它们进行排序，使得相同颜色的元素相邻，并按照红色、白色、蓝色顺序排列。
+此题中，我们使用整数 0、 1 和 2 分别表示红色、白色和蓝色。
+注意:
+不能使用代码库中的排序函数来解决这道题。
+示例:
+输入: [2,0,2,1,1,0]
+输出: [0,0,1,1,2,2]
+```
+
+
+
+```
+// 思路：三个指针；
+p0指向0的最右界；p2指向2的最左界；cur指向当前元素；
+当前元素超越2的左界，算法结束；
+遍历原数组，当前元素为0，则与p0交换，同时p0与cur都++，因为此时p0指向的只可能是1；
+当前元素为2，与p2交换，p2--，但是cur维持原值，因为cur交换后元素可能是0或1；
+当前元素为1，cur++；
+class Solution {
+    public void sortColors(int[] nums) {
+        if(nums==null || nums.length<2){
+            return;
+        }
+        int p0=0;
+        int p2=nums.length-1;
+        int cur=0;
+        int tmp=0;
+        while (cur<=p2){
+            if(nums[cur]==0){
+                tmp = nums[p0];
+                nums[p0]=nums[cur];
+                nums[cur]=tmp;
+                cur++;
+                p0++;
+            }else if(nums[cur]==2){
+                tmp=nums[p2];
+                nums[p2]=nums[cur];
+                nums[cur]=tmp;
+                p2--;
+            }else{
+                cur++;
+            }
+        }
+    }
+}
+```
+
+
+
+```
+//  快排分组思想，边界情况比较复杂
+class Solution {
+    public void sortColors(int[] nums) {
+        if(nums==null || nums.length<2){
+            return;
+        }
+        int left = 0;
+        int right = nums.length-1;
+        int key = nums[left];
+        while (left<right){
+            while (left<right && nums[right]>0){
+                right--;
+            }
+            nums[left]=nums[right];
+            while (left<right&&nums[left]==0){
+                left++;
+            }
+            nums[right]=nums[left];
+        }
+        nums[left]=key;
+        if(key<1 && left<nums.length-1){
+            left++;
+        }
+        right=nums.length-1;
+
+        key = nums[left];
+        while (left<right){
+            while (left<right && nums[right]>1){
+                right--;
+            }
+            nums[left]=nums[right];
+            while (left<right&&nums[left]==1){
+                left++;
+            }
+            nums[right]=nums[left];
+        }
+        nums[left]=key;
+    }
+}
+```
+
