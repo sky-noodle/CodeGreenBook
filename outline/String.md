@@ -88,7 +88,7 @@ class Solution {
         });
         StringBuffer res = new StringBuffer();
         for(String s:str){
-            res.append(s);
+            res.append(s); 
         }
         return res.toString();
     }
